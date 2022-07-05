@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import Game from "./components/Game";
 import { useState, useEffect } from "react";
 
-const socketIoUrl = process.env.REACT_APP_SOCKET_IO_SERVER;
+const socketIoUrl = process.env.REACT_APP_SOCKET_IO_SERVER || "http://localhost:5000";
 const socket = io(socketIoUrl);
 
 const App = () => {
