@@ -1,10 +1,7 @@
 import Intro from "./components/Intro";
-import { io } from "socket.io-client";
 import Game from "./components/Game";
 import { useState, useEffect } from "react";
-
-const socketIoUrl = process.env.REACT_APP_SOCKET_IO_SERVER || "http://localhost:5000";
-const socket = io(socketIoUrl);
+import socket from "./socket";
 
 const App = () => {
   const [isHidden, setIsHidden] = useState(true);
@@ -13,10 +10,6 @@ const App = () => {
   const [player, setPlayer] = useState({});
 
   useEffect(() => {
-    socket.once("player", (player) => {
-      setPlayer(player);
-    });
-
     socket.on("question", (question) => {
       setQuestion(`${question} = ?`);
     });
@@ -41,14 +34,13 @@ const App = () => {
   const joinUser = (name) => {
     if (name !== "") {
       socket.emit("userJoined", name);
+      setPlayer({ name });
       setIsHidden(false);
     }
   };
 
   const answerUser = (answer) => {
-    const socket = io(socketIoUrl);
-    socket.connect();
-    socket.emit("answer", { answer, player });
+    socket.emit("answer", { answer });
   };
 
   return (
